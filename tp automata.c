@@ -15,7 +15,8 @@ Cada parte debe ser analizada por separado para determinar si es un número deci
 #include <ctype.h>
 
 int caracteresPertenecenAlAlfabeto (char*s); 
-
+int esPalabra(char*);
+int columna(int);
 
 int main()
 {
