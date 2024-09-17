@@ -133,3 +133,86 @@ int caracteresPertenecenAlAlfabeto(char* cadena)
     
     return 1; // Todos los caracteres son válidos
 }
+
+/*-------------------------------------INTENTO DE PROGRAMAR EL AUTOMATA--------------------------------------------*/
+int esPalabra(char* cadena)
+{
+	//1ero hay que hacer la matriz (TT)--> el la que me da la logica para saber si una cadena llega o no a un estado de aceptacion
+	static int tt[8][7]={
+							{1,1,3,7,2,2,7},
+							{7,7,2,7,2,2,7},
+							{7,7,2,7,2,2,7},
+							{7,7,4,5,4,7,7},
+							{7,7,4,7,4,7,7},
+							{7,7,6,7,6,6,6},
+							{7,7,6,7,6,6,6},
+							{7,7,7,7,7,7,7}
+						};
+	
+	int estado = 0; // ese es mi estado inicial
+	int i=0; //lo que voy a usar para ir avanzando en la cadeena
+	
+	//ALTERNATIVA 1: avanzo hasta el final de la cadena sin importar los estados intermedios. solo importa el estado final
+	int c=cadena[0]; //los char son un subconjunto de los enteros
+	
+	while(c != '\0')//itero mientras que no sea fin de cadena
+	{
+		estado=tt[estado][columna(c)]; //el nuevo estado
+		
+		c=cadena[++i]; //++i: primero suma y despues asigno
+	}
+	//cuando sale del while sale en un estado, a mi me interesan los estados de ACEPTACION
+	if(estado==2)
+	{
+		return 1;//devulvo verdadero porque 2 es un estado de aceptaion
+	}
+	if(estado==4)
+	{
+		return 1;
+	}
+	if(estado==6)
+	{
+		return 1;
+	}
+	//HAY QUE VER LA FORMA DE QUE SI ESTADO==2 => DECIMAL, ==4 => OCTAL, ==6 => HEXADECIMAL
+	//SI PUEDO HACER ESO=> NO IRIA LAS FUNCIONES ESDECIMAL, ETC
+	
+	return 0;
+}
+
+
+int columna (int c)
+{
+	if(c == '+')
+	{
+		return 1;//numero de columna que devuelve 
+	}
+	if(c == '-')
+	{
+		return 2;
+	}
+	if(c == '0')
+	{
+		return 3;
+	}
+	if(c == 'x' || c == 'X')
+	{
+		return 4;
+	}
+	if(c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7')
+	{
+		return 5;
+	}
+	if(c == '8' || c == '9')
+	{
+		return 6;
+	}
+	if(c == 'a' || c == 'b' || c == 'c' || c == 'd' || c == 'e' || c == 'f' || c == 'A' || c == 'B' || c == 'C' || c == 'D' || c == 'E' || c == 'F')
+	{
+		return 7;
+	}
+	else
+	{
+		return 0;
+	}
+}
