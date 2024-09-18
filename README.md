@@ -1,5 +1,3 @@
-# Consignas
-
 # COMENTARIOS DE LA PROFE SOBRE EL TP:
 //HACER VALIDACION PREVIA PARA VER SI LA VIA ES DECIMAL, OCTA, Y HACER 1 MAT PAR CADA UNA
 //MEJOR OPCION: 
@@ -20,7 +18,7 @@
 //arboles tal vez
 //debe funcionar bien sin parentesis (lo de los signos)
 
-
+# Consignas
 
 Se deben incluir impresiones de las pantallas mostrando el funcionamiento del mismo.
 La entrega debe contener los archivos fuente y un pdf con las pantallas, instructivo y especificaciones acerca de las decisiones tomadas para la resolución del mismo.
