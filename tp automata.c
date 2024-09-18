@@ -1,16 +1,4 @@
-/*1)Dada una cadena que contenga varios números que pueden ser decimales, octales o
-hexadecimales, con o sin signo para el caso de los decimales, separados por el carácter
-‘#’ , reconocer los tres grupos de constantes enteras, indicando si hubo un error léxico ,
-en caso de ser correcto contar la cantidad de cada grupo.
-Debe diagramar y entregar el o los autómatas utilizados y las matrices de transición.
-La cadena debe ingresar por línea de comando o por archivo.
-*/
-
-/*Entrada y Separación por Caracter ‘#’:
-
-Se debe leer la cadena completa y dividirla en partes usando el separador #.
-Cada parte debe ser analizada por separado para determinar si es un número decimal, octal o hexadecimal.*/
-
+1)
 #include <stdio.h>
 #include <ctype.h>
 
@@ -183,34 +171,34 @@ int columna (int c)
 {
 	if(c == '+')
 	{
-		return 1;//numero de columna que devuelve 
+		return 0;//numero de columna que devuelve 
 	}
 	if(c == '-')
 	{
-		return 2;
+		return 1;
 	}
 	if(c == '0')
 	{
-		return 3;
+		return 2;
 	}
 	if(c == 'x' || c == 'X')
 	{
-		return 4;
+		return 3;
 	}
 	if(c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7')
 	{
-		return 5;
+		return 4;
 	}
 	if(c == '8' || c == '9')
 	{
-		return 6;
+		return 5;
 	}
 	if(c == 'a' || c == 'b' || c == 'c' || c == 'd' || c == 'e' || c == 'f' || c == 'A' || c == 'B' || c == 'C' || c == 'D' || c == 'E' || c == 'F')
 	{
-		return 7;
+		return 6;
 	}
 	else
 	{
-		return 0;
+		return -1;
 	}
 }
