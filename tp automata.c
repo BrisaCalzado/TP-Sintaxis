@@ -202,3 +202,42 @@ int columna (int c)
 		return -1;
 	}
 }
+
+//punto 2 provisorio 
+#include <stdio.h>
+#include <ctype.h>
+
+/* atoi: convierte s a entero; versiÃ³n corregida */
+int atoi(char s[]){
+    int i, n, sign;
+    
+    // Ignorar espacios en blanco
+    for (i = 0; isspace(s[i]); i++) 
+        ;
+
+    // Determinar el signo
+    sign = (s[i] == '-') ? -1 : 1;
+
+    // Ignorar el signo, si lo hay
+    if (s[i] == '+' || s[i] == '-')
+        i++;
+
+    // Convertir los caracteres a enteros
+    for (n = 0; isdigit(s[i]); i++)
+        n = 10 * n + (s[i] - '0');
+    
+    // Devolver el resultado con el signo adecuado
+    return sign * n;
+}
+
+int main() {
+    char str[11] ; //por la longitud del int que es 10 + 1 digito
+    printf("ingrese una cadena");
+    scanf("%s", str);
+    int num = atoi(str);
+    printf("El nÃºmero convertido es: %d\n", num);  // Salida: -1234
+    return 0;
+}
+
+
+
