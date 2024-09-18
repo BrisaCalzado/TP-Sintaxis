@@ -3,7 +3,7 @@
 #include <ctype.h>
 
 int caracteresPertenecenAlAlfabeto (char*s); 
-int esPalabra(char*, int*); //no se si sta bien hecho el prototipo
+int esPalabra(char*, int*); 
 int columna(int);
 
 int main()
