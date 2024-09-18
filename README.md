@@ -1,5 +1,27 @@
 # Consignas
 
+# COMENTARIOS DE LA PROFE SOBRE EL TP:
+//HACER VALIDACION PREVIA PARA VER SI LA VIA ES DECIMAL, OCTA, Y HACER 1 MAT PAR CADA UNA
+//MEJOR OPCION: 
+//HACER UNA MATRIZ PARA LOS 3 (primero hay que armar el automata obviamente) 
+
+//2da parte tp
+//yo recibo una cadena. ej la cadena +23 se debe convertir en el numero 23
+//PARA HACER ESTO LEER PG 68 DE CARNIGAN Y RICHI--> mecanismo donde resivo caracteres y convierto la cadena +23 en el num 23
+//convierto la cadena numero a un numero, y ese numero puede ser uno neg
+
+//3RA PARTE
+//eso lo necesito para el pto que le sigue 
+//expresion aritmetica simple: + - * /
+//ej: 3+4*6-12 --> esa cadena debe devolverme le nro del rdo. la cadena 3 debe convertirse en el num 3 y asi con todas (para esto necesito la funcion anterior)
+//avanzo hasta encontrar el signo y lo convierto en numero
+//calculadoras antiguas usaban un metordo para hacer estos calculos, algo que tal vez vimos en discreta
+//debo encontrar de la forma de haver esas operaciones matematicas
+//arboles tal vez
+//debe funcionar bien sin parentesis (lo de los signos)
+
+
+
 Se deben incluir impresiones de las pantallas mostrando el funcionamiento del mismo.
 La entrega debe contener los archivos fuente y un pdf con las pantallas, instructivo y especificaciones acerca de las decisiones tomadas para la resolución del mismo.
 
