@@ -15,7 +15,7 @@ Cada parte debe ser analizada por separado para determinar si es un número deci
 #include <ctype.h>
 
 int caracteresPertenecenAlAlfabeto (char*s); 
-int esPalabra(char*);
+int esPalabra(char*, int*); //no se si sta bien hecho el prototipo
 int columna(int);
 
 int main()
@@ -44,25 +44,25 @@ int main()
 			{
 				subcadena[j] = cadena[inicio + j];
 			}
-			subcadena[length] = '\0'; //"cierro" la subcadena
+			subcadena[largo] = '\0'; //"cierro" la subcadena
 			
-			//fijarme que tipo de numero es, y sumar
-			if(esDecimal(subcadena))
+			//meter subcadena en el automata, fijarme que tipo de numero es, y sumar
+			int tipoNumero = 0;
+			esPalabra(subcadena, &tipoNumero);
+			
+			if(tipoNumero == 1)
 			{
 				contadorDecimales++;
-			}
-			else if(esOctal(subcadena))
+			} else if(tipoNumero == 2)
 			{
 				contadorOctales++;
-			}
-			else if(esHexadecimal(subcadena))
+			} else if(tipoNumero == 3)
 			{
 				contadorHexadecimales++;
-			}
-			else 
+			} else if(tipoNumero == 4)
 			{
-				printf("Hay error lexico en: %s", subcadena); //ej079--> los octales no pueden tener 9
-				return 0; //se termino
+				printf("Hay error lexico en: %s\n", subcadena); //ej079--> los octales no pueden tener 9
+				return 0;
 			}
 			
 			inicio = i + 1; // proximo caracter + 1
@@ -75,25 +75,25 @@ int main()
 	{
 		subcadena[j] = cadena[inicio + j];
 	}
-	subcadena[length] = '\0'; //"cierro" la subcadena
-			
-	//fijarme que tipo de numero es, y sumar
-	if(esDecimal(subcadena))
+	subcadena[largo] = '\0'; //"cierro" la subcadena
+	
+	//meter subcadena en el automata, fijarme que tipo de numero es, y sumar
+	int tipoNumero = 0;
+	esPalabra(subcadena, &tipoNumero);
+		
+	if(tipoNumero == 1)
 	{
 		contadorDecimales++;
-	}
-	else if(esOctal(subcadena))
+	} else if(tipoNumero == 2)
 	{
 		contadorOctales++;
-	}
-	else if(esHexadecimal(subcadena))
+	} else if(tipoNumero == 3)
 	{
 		contadorHexadecimales++;
-	}
-	else 
+	} else if(tipoNumero == 4)
 	{
-		printf("Hay error lexico en: %s", subcadena); //ej079--> los octales no pueden tener 9
-		return 0; 
+		printf("Hay error lexico en: %s\n", subcadena); //ej079--> los octales no pueden tener 9
+		return 0;
 	}
 
 	printf("Cantidad de decimales: %d\n", contadorDecimales);
@@ -102,14 +102,12 @@ int main()
 
 	return 0;
 }
-//HICE ALGO MAL. UNA VEZ QUE TENGO LA SUBCADENA, METERLA AL AUTOMATA Y AHI VERIFICO ESTO: printf("Hay error lexico en: %s", subcadena)
-//SI LLEGA A ESTAR TODO BIEN, AHI LO METO EN LAS FUNCIONES DE DECIMAL, OCTAL, ETC
 
 int caracteresPertenecenAlAlfabeto(char* cadena)
 {
 	int i = 0;
 	int j = 0;
-	char caracteresValidos [27] = "ABCDEFXabcdefx0123456789-+#";
+	char caracteresValidos[27] = "ABCDEFXabcdefx0123456789-+#";
 	
 	for (i = 0; cadena[i]; i++)
     {
@@ -136,7 +134,7 @@ int caracteresPertenecenAlAlfabeto(char* cadena)
 }
 
 /*-------------------------------------INTENTO DE PROGRAMAR EL AUTOMATA--------------------------------------------*/
-int esPalabra(char* cadena)
+int esPalabra(char* cadena, int* tipoNumero)
 {
 	//1ero hay que hacer la matriz (TT)--> el la que me da la logica para saber si una cadena llega o no a un estado de aceptacion
 	static int tt[8][7]={
@@ -151,36 +149,35 @@ int esPalabra(char* cadena)
 						};
 	
 	int estado = 0; // ese es mi estado inicial
-	int i=0; //lo que voy a usar para ir avanzando en la cadeena
+	int i=0;
 	
-	//ALTERNATIVA 1: avanzo hasta el final de la cadena sin importar los estados intermedios. solo importa el estado final
-	int c=cadena[0]; //los char son un subconjunto de los enteros
+	int c=cadena[0]; 
 	
-	while(c != '\0')//itero mientras que no sea fin de cadena
+	while(c != '\0')
 	{
-		estado=tt[estado][columna(c)]; //el nuevo estado
-		
-		c=cadena[++i]; //++i: primero suma y despues asigno
+		estado=tt[estado][columna(c)]; 
+		c=cadena[++i]; 
 	}
 	//cuando sale del while sale en un estado, a mi me interesan los estados de ACEPTACION
 	if(estado==2)
 	{
-		return 1;//devulvo verdadero porque 2 es un estado de aceptaion
+		*tipoNumero = 1; // Decimal
+		return 1; 
 	}
 	if(estado==4)
 	{
-		return 1;
+		*tipoNumero = 2; // Octal
+		return 1; 
 	}
 	if(estado==6)
 	{
-		return 1;
+		*tipoNumero = 3; // Hexadecimal
+		return 1; //hexadecimal
 	}
-	//HAY QUE VER LA FORMA DE QUE SI ESTADO==2 => DECIMAL, ==4 => OCTAL, ==6 => HEXADECIMAL
-	//SI PUEDO HACER ESO=> NO IRIA LAS FUNCIONES ESDECIMAL, ETC
 	
-	return 0;
+	*tipoNumero = 4; //Error léxico
+	return 0; //no es una palabra valida
 }
-
 
 int columna (int c)
 {
