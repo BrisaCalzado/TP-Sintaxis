@@ -232,7 +232,8 @@ int convertirCadenaAEntero(char cadena[]) {
     /*El num en 10*num aumenta según el primer numero de la lista
 	Ej en el numero 567, num = 5, dsp en la siguiente iteración va a ser 10*5 + 6, y dsp 10*56 + 7 
     En (cadena[i] - '0') lo que hace es restar el valor ascii del indice de la cadena y del 0
-	Por ejemplo 0 = 48 ascii, si estoy en el índice 1 = 49 ascii, hago 49 - 48 y ahí me da el 1 del índice que en verdad quiero*/
+	Por ejemplo 0 = 48 ascii, si el numero que quiero es 1 = 49 ascii, 
+ 	hago 49 - 48 y ahí me da el 1 del que en verdad quiero*/
 
     // Devolver el número convertido, aplicando el signo
     return signo * num;
