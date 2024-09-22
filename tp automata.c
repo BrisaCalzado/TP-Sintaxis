@@ -1,4 +1,3 @@
-1)
 #include <stdio.h>
 #include <ctype.h>
 
@@ -87,6 +86,12 @@ int main()
 	printf("Cantidad de decimales: %d\n", contadorDecimales);
 	printf("Cantidad de octales: %d\n", contadorOctales);
 	printf("Cantidad de hexadecimales: %d\n", contadorHexadecimales);
+
+	char cadena2[11] ; //por la longitud del int que es 10 + 1 digito
+    	printf("Ingrese una cadena: ");
+    	scanf("%s", cadena2);
+    	int numero = convertirCadenaAEntero(cadena2);
+    	printf("El numero convertido es: %d\n", numero);  // Salida: -1234
 
 	return 0;
 }
@@ -203,41 +208,35 @@ int columna (int c)
 	}
 }
 
-//punto 2 provisorio 
-#include <stdio.h>
-#include <ctype.h>
+int convertirCadenaAEntero(char cadena[]) {
+    int i = 0, num = 0, signo = 1;
 
-/* atoi: convierte s a entero; versiÃ³n corregida */
-int atoi(char s[]){
-    int i, n, sign;
-    
-    // Ignorar espacios en blanco
-    for (i = 0; isspace(s[i]); i++) 
-        ;
+    // Ignorar espacios en blanco iniciales
+    for (i = 0; isspace(cadena[i]); i++);
 
-    // Determinar el signo
-    sign = (s[i] == '-') ? -1 : 1;
-
-    // Ignorar el signo, si lo hay
-    if (s[i] == '+' || s[i] == '-')
+    // Determinar si hay un signo negativo o positivo
+    if (cadena[i] == '-') {
+        signo = -1;
         i++;
+    } else if (cadena[i] == '+') {
+        i++;
+    }
 
-    // Convertir los caracteres a enteros
-    for (n = 0; isdigit(s[i]); i++)
-        n = 10 * n + (s[i] - '0');
+    // Convertir los caracteres numéricos en el número entero
+      
+     for (num = 0; isdigit(cadena[i]); i++){
+     	num = 10 * num + (cadena[i] - '0');
+	 }
     
-    // Devolver el resultado con el signo adecuado
-    return sign * n;
+    /*El num en 10*num aumenta según el primer numero de la lista
+	Ej en el numero 567, num = 5, dsp en la siguiente iteración va a ser 10*5 + 6, y dsp 10*56 + 7 
+    En (cadena[i] - '0') lo que hace es restar el valor ascii del indice de la cadena y del 0
+	Por ejemplo 0 = 48 ascii, si estoy en el índice 1 = 49 ascii, hago 49 - 48 y ahí me da el 1 del índice que en verdad quiero*/
+
+    // Devolver el número convertido, aplicando el signo
+    return signo * num;
 }
 
-int main() {
-    char str[11] ; //por la longitud del int que es 10 + 1 digito
-    printf("ingrese una cadena");
-    scanf("%s", str);
-    int num = atoi(str);
-    printf("El nÃºmero convertido es: %d\n", num);  // Salida: -1234
-    return 0;
-}
 
 
 
