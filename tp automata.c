@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <ctype.h>
 
-int caracteresPertenecenAlAlfabeto (char*s); 
+int caracteresPertenecenAlAlfabeto (char*cadena); 
 int esPalabra(char*, int*); 
 int columna(int);
+int convertirCadenaAEntero(char cadena[]);
 
 int main()
 {
