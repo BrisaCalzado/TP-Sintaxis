@@ -1,13 +1,16 @@
 #include <stdio.h>
 #include <ctype.h>
 
+//--------------------PROTOTIPOS DEL PUNTO 1-----------------------
 int caracteresPertenecenAlAlfabeto (char*cadena); 
 int esPalabra(char*, int*); 
 int columna(int);
+//--------------------PROTOTIPOS DEL PUNTO 2-----------------------
 int convertirCadenaAEntero(char cadena[]);
 
 int main()
 {
+	//--------------------PUNTO 1-----------------------
 	char cadena[100];
 	
 	printf("Ingrese la cadena de numeros separados por '#': ");
@@ -88,6 +91,7 @@ int main()
 	printf("Cantidad de octales: %d\n", contadorOctales);
 	printf("Cantidad de hexadecimales: %d\n", contadorHexadecimales);
 
+	//--------------------PUNTO 2-----------------------
 	char cadena2[11] ; //por la longitud del int que es 10 + 1 digito
     	printf("Ingrese una cadena: ");
     	scanf("%s", cadena2);
@@ -97,6 +101,7 @@ int main()
 	return 0;
 }
 
+//--------------------FUNCIONES DEL PUNTO 1-----------------------
 int caracteresPertenecenAlAlfabeto(char* cadena)
 {
 	int i = 0;
@@ -127,7 +132,6 @@ int caracteresPertenecenAlAlfabeto(char* cadena)
     return 1; // Todos los caracteres son válidos
 }
 
-/*-------------------------------------INTENTO DE PROGRAMAR EL AUTOMATA--------------------------------------------*/
 int esPalabra(char* cadena, int* tipoNumero)
 {
 	//1ero hay que hacer la matriz (TT)--> el la que me da la logica para saber si una cadena llega o no a un estado de aceptacion
@@ -209,6 +213,7 @@ int columna (int c)
 	}
 }
 
+//--------------------FUNCIONES DEL PUNTO 2-----------------------
 int convertirCadenaAEntero(char cadena[]) {
     int i = 0, num = 0, signo = 1;
 
