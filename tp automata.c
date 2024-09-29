@@ -1,5 +1,9 @@
 #include <stdio.h>
 #include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define MAX 100
 
 //--------------------PROTOTIPOS DEL PUNTO 1-----------------------
 int caracteresPertenecenAlAlfabeto (char*cadena); 
@@ -7,6 +11,12 @@ int esPalabra(char*, int*);
 int columna(int);
 //--------------------PROTOTIPOS DEL PUNTO 2-----------------------
 int convertirCadenaAEntero(char cadena[]);
+//--------------------PROTOTIPOS DEL PUNTO 3-----------------------
+int esOperador(char c);
+int precedencia(char op);
+int hacerOperacion(int a, int b, char op);
+int evaluarCadenaPosfija(char* tokens);
+void prefijaAPosfija(char* expresion, char* cadenaDeSalida);
 
 int main()
 {
@@ -97,6 +107,13 @@ int main()
     	scanf("%s", cadena2);
     	int numero = convertirCadenaAEntero(cadena2);
     	printf("El numero convertido es: %d\n", numero);  // Salida: -1234
+	//--------------------PUNTO 3-----------------------
+	char expresion[MAX];
+    printf("Ingrese un calculo sencillo: ");
+    scanf("%s", expresion);    
+    char expresionPosfija[MAX];
+    prefijaAPosfija(expresion, expresionPosfija);
+    printf("Resultado: %d\n", evaluarCadenaPosfija(expresionPosfija));
 
 	return 0;
 }
@@ -244,6 +261,82 @@ int convertirCadenaAEntero(char cadena[]) {
     return signo * num;
 }
 
+//--------------------FUNCIONES DEL PUNTO 3-----------------------
+int esOperador(char c) {
+    return (c == '+' || c == '-' || c == '*' || c == '/');
+}
 
+int precedencia(char op) {
+    switch (op) {
+        case '+':
+        case '-':
+            return 1;
+        case '*':
+        case '/':
+            return 2;
+        default:
+            return 0;
+    }
+}
+
+int hacerOperacion(int a, int b, char op) {
+    switch (op) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '*': return a * b;
+        case '/': return a / b;
+    }
+    return 0;
+}
+
+int evaluarCadenaPosfija(char* tokens) { //le pasamos la cadena YA en posfija
+    int stack[MAX], top = -1; //array como pila y su indice (-1: para indicar que esta vacia)
+    char numStr[MAX]; //arreglo temporal para construir numeros de muchos digitos
+    int numStrIndex = 0; //indice para construir los numeros
+    int len = strlen(tokens);
+
+    for (int i = 0; i<len; i++) {
+        if (isdigit(tokens[i]) || (tokens[i] == '-' && isdigit(tokens[i+1]))) { //la 2da permite reconocer negativos
+            numStr[numStrIndex++] = tokens[i];
+            if (!isdigit(tokens[i+1])) {
+                numStr[numStrIndex] = '\0';
+                stack[++top] = convertirCadenaAEntero(numStr); //guarda en la pila el nro convertido
+                numStrIndex = 0; //para construir el siguiente nro
+            }
+        } else if (esOperador(tokens[i])) { //si es operador
+            int val2 = stack[top--]; //saca 2 nros de la pila
+            int val1 = stack[top--];
+            stack[++top] = hacerOperacion(val1, val2, tokens[i]); //realiza la operacion y lo pone en la pila
+        }
+    }
+    return stack[top]; //cuando se proceso todo, el resultdo de la exp queda en la cima de la pila
+}
+
+void prefijaAPosfija(char* expresion, char* cadenaDeSalida) {
+    char stack[MAX]; //pila
+    int top = -1, k = 0; //top es pos de la pila y k de la cadena de salida
+    int len = strlen(expresion);
+    
+    for (int i = 0; i<len; i++) {
+        if (isdigit(expresion[i])) { //si es un digito
+            while (isdigit(expresion[i])) {
+                cadenaDeSalida[k++] = expresion[i++]; //copia el numero o los numeros en la cadena de salida
+            }
+            cadenaDeSalida[k++] = ' ';
+            i--; //retrocede el índice i-- para no saltarse el siguiente carácter después del número.
+        } else if (esOperador(expresion[i])) { //si es un operador
+            while (top != -1 && precedencia(stack[top]) >= precedencia(expresion[i])) { //mientras: la pila no este vacia Y haya operadores en la pila con mayor
+                cadenaDeSalida[k++] = stack[top--];					// o igual precedencia que el operador actual, se sacan de la pila y se ponen en la salida output
+                cadenaDeSalida[k++] = ' ';
+            }
+            stack[++top] = expresion[i]; //coloca el operador actual a la pila
+        }
+    }
+    while (top != -1) { //para verificar q no queden operadores en la pila, los saca y pone el la cadena de salida
+        cadenaDeSalida[k++] = stack[top--];
+        cadenaDeSalida[k++] = ' ';
+    }
+    cadenaDeSalida[k] = '\0'; //para terminar la cadena
+}
 
 
