@@ -179,6 +179,11 @@ int esPalabra(char* cadena, int* tipoNumero)
 		*tipoNumero = 1; // Decimal
 		return 1; 
 	}
+	if (estado == 3) //para considerar el cero a secas como decimal ej: 123#0#123
+	{
+		*tipoNumero = 1; // Decimal
+		return 1; 
+	}
 	if(estado==4)
 	{
 		*tipoNumero = 2; // Octal
