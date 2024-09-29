@@ -299,8 +299,9 @@ int evaluarCadenaPosfija(char* tokens) { //le pasamos la cadena YA en posfija
     char numStr[MAX]; //arreglo temporal para construir numeros de muchos digitos
     int numStrIndex = 0; //indice para construir los numeros
     int len = strlen(tokens);
+    int i = 0;
 
-    for (int i = 0; i<len; i++) {
+    for (i = 0; i<len; i++) {
         if (isdigit(tokens[i]) || (tokens[i] == '-' && isdigit(tokens[i+1]))) { //la 2da permite reconocer negativos
             numStr[numStrIndex++] = tokens[i];
             if (!isdigit(tokens[i+1])) {
@@ -321,8 +322,9 @@ void prefijaAPosfija(char* expresion, char* cadenaDeSalida) {
     char stack[MAX]; //pila
     int top = -1, k = 0; //top es pos de la pila y k de la cadena de salida
     int len = strlen(expresion);
+    int i = 0;
     
-    for (int i = 0; i<len; i++) {
+    for (i = 0; i<len; i++) {
         if (isdigit(expresion[i])) { //si es un digito
             while (isdigit(expresion[i])) {
                 cadenaDeSalida[k++] = expresion[i++]; //copia el numero o los numeros en la cadena de salida
