@@ -115,7 +115,7 @@ int main()
     printf("Ingrese un calculo sencillo:  (sin espacios y pudiendo utilizar los operadores + - / *)\n");
     scanf("%s", expresion);    
 
-if(!caracteresPertenecenAlAlfabetoP3(expresion)) // si NO verifica algun caracter
+	if(!caracteresPertenecenAlAlfabetoP3(expresion)) // si NO verifica algun caracter
 	{
 		printf("La expresión contiene caracteres que no pertenecen al alfabeto.\n");
 		return 0;
