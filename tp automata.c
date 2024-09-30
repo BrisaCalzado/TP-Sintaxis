@@ -6,9 +6,9 @@
 #define MAX 100
 
 //--------------------PROTOTIPOS DEL PUNTO 1-----------------------
-int caracteresPertenecenAlAlfabeto (char*cadena); 
-int esPalabra(char*, int*); 
-int columna(int);
+int caracteresPertenecenAlAlfabeto (char*cadena, char*caracteresValidos); 
+int esPalabra(char* cadena, int* tipoNumero, int modo);
+int columna(char c, int quePunto);
 //--------------------PROTOTIPOS DEL PUNTO 2-----------------------
 int convertirCadenaAEntero(char cadena[]);
 //--------------------PROTOTIPOS DEL PUNTO 3-----------------------
@@ -17,9 +17,8 @@ int precedencia(char op);
 int hacerOperacion(int a, int b, char op);
 int evaluarCadenaPosfija(char* tokens);
 void infijaAPosfija(char* expresion, char* cadenaDeSalida);
-int caracteresPertenecenAlAlfabetoP3 (char*cadena);
-int esPalabraP3(char*); 
-int columnaP3(int);
+
+
 
 int main()
 {
@@ -28,8 +27,9 @@ int main()
 	
 	printf("Ingrese la cadena de numeros separados por '#': ");
 	scanf("%s", cadena);
+	char caracteresValidos1[27] = "ABCDEFXabcdefx0123456789-+#";
 	
-	if(!caracteresPertenecenAlAlfabeto(cadena)) // si NO verifica la cadena
+	if(!caracteresPertenecenAlAlfabeto(cadena, caracteresValidos1)) // si NO verifica la cadena
 	{
 		printf("Hay caracteres que no pertenecen al alfabeto.");
 		return 0; 
@@ -52,7 +52,7 @@ int main()
 			
 			//meter subcadena en el automata, fijarme que tipo de numero es, y sumar
 			int tipoNumero = 0;
-			esPalabra(subcadena, &tipoNumero);
+			esPalabra(subcadena, &tipoNumero, 0);
 			
 			if(tipoNumero == 1)
 			{
@@ -83,7 +83,8 @@ int main()
 	
 	//meter subcadena en el automata, fijarme que tipo de numero es, y sumar
 	int tipoNumero = 0;
-	esPalabra(subcadena, &tipoNumero);
+
+	esPalabra(subcadena, &tipoNumero, 0);
 		
 	if(tipoNumero == 1)
 	{
@@ -110,20 +111,23 @@ int main()
     	scanf("%s", cadena2);
     	int numero = convertirCadenaAEntero(cadena2);
     	printf("El numero convertido es: %d\n", numero);  // Salida: -1234
+    	
+    	
 	//--------------------PUNTO 3-----------------------
 	char expresion[MAX];
     printf("Ingrese un calculo sencillo:  (sin espacios y pudiendo utilizar los operadores + - / *)\n");
     scanf("%s", expresion);    
-
-	if(!caracteresPertenecenAlAlfabetoP3(expresion)) // si NO verifica algun caracter
+	char caracteresValidos3[15] = "0123456789-+*/";
+	
+	if(!caracteresPertenecenAlAlfabeto(expresion, caracteresValidos3)) // si NO verifica algun caracter
 	{
-		printf("La expresión contiene caracteres que no pertenecen al alfabeto.\n");
+		printf("La expresion contiene caracteres que no pertenecen al alfabeto.\n");
 		return 0;
 	}
 
-	if (!esPalabraP3(expresion)) // si NO verifica expresion
+	if (!esPalabra(expresion, NULL, 1)) // si NO verifica expresion
 	{
-		printf("La expresión contiene un error sintáctico\n");
+		printf("La expresion contiene un error sintactico\n");
 		return 0;
 	}
     char expresionPosfija[MAX];
@@ -134,11 +138,11 @@ int main()
 }
 
 //--------------------FUNCIONES DEL PUNTO 1-----------------------
-int caracteresPertenecenAlAlfabeto(char* cadena)
+
+int caracteresPertenecenAlAlfabeto(char* cadena, char*caracteresValidos)
 {
 	int i = 0;
 	int j = 0;
-	char caracteresValidos[27] = "ABCDEFXabcdefx0123456789-+#";
 	
 	for (i = 0; cadena[i]; i++)
     {
@@ -164,90 +168,107 @@ int caracteresPertenecenAlAlfabeto(char* cadena)
     return 1; // Todos los caracteres son válidos
 }
 
-int esPalabra(char* cadena, int* tipoNumero)
-{
-	//1ero hay que hacer la matriz (TT)--> el la que me da la logica para saber si una cadena llega o no a un estado de aceptacion
-	static int tt[8][7]={
-							{1,1,3,7,2,2,7},
-							{7,7,2,7,2,2,7},
-							{7,7,2,7,2,2,7},
-							{7,7,4,5,4,7,7},
-							{7,7,4,7,4,7,7},
-							{7,7,6,7,6,6,6},
-							{7,7,6,7,6,6,6},
-							{7,7,7,7,7,7,7}
-						};
-	
-	int estado = 0; // ese es mi estado inicial
-	int i=0;
-	
-	int c=cadena[0]; 
-	
-	while(c != '\0')
-	{
-		estado=tt[estado][columna(c)]; 
-		c=cadena[++i]; 
-	}
-	//cuando sale del while sale en un estado, a mi me interesan los estados de ACEPTACION
-	if(estado==2)
-	{
-		*tipoNumero = 1; // Decimal
-		return 1; 
-	}
-	if (estado == 3) //para considerar el cero a secas como decimal ej: 123#0#123
-	{
-		*tipoNumero = 1; // Decimal
-		return 1; 
-	}
-	if(estado==4)
-	{
-		*tipoNumero = 2; // Octal
-		return 1; 
-	}
-	if(estado==6)
-	{
-		*tipoNumero = 3; // Hexadecimal
-		return 1; //hexadecimal
-	}
-	
-	*tipoNumero = 4; //Error léxico
-	return 0; //no es una palabra valida
+
+int esPalabra(char* cadena, int* tipoNumero, int modo) {
+    // Definir tablas de transición combinadas
+    // Modo 0: Punto 1 - Números (decimal, octal, hexadecimal)
+    // Modo 1: Punto 3 - Expresiones aritméticas (+, -, *, /)
+    
+    // Matriz para el autómata del punto 1 (manejo de números)
+    static int ttP1[8][7] = {
+        {1, 1, 3, 7, 2, 2, 7},
+        {7, 7, 2, 7, 2, 2, 7},
+        {7, 7, 2, 7, 2, 2, 7},
+        {7, 7, 4, 5, 4, 7, 7},
+        {7, 7, 4, 7, 4, 7, 7},
+        {7, 7, 6, 7, 6, 6, 6},
+        {7, 7, 6, 7, 6, 6, 6},
+        {7, 7, 7, 7, 7, 7, 7}
+    };
+    
+    // Matriz para el autómata del punto 3 (manejo de expresiones aritméticas)
+    static int ttP3[5][2] = {
+        {1, 4},
+        {1, 2},
+        {3, 4},
+        {3, 2},
+        {4, 4}
+    };
+    
+    int estado = 0;
+    int i = 0;
+    int c = cadena[0];
+
+    while (c != '\0') {
+        // Elegir la tabla y la columna según el modo
+        
+        if (modo == 0) {  // Modo números (Punto 1)
+            estado = ttP1[estado][columna(c, 1)];
+            
+        } else if (modo == 1) {  // Modo expresiones (Punto 3)
+            estado = ttP3[estado][columna(c, 0)];
+        }
+        c = cadena[++i];
+    }
+
+    // Verificar estados de aceptación según el modo
+    if (modo == 0) {  // Validación para números
+        if (estado == 2 || estado == 3) {
+            *tipoNumero = 1;  // Decimal
+            return 1;
+        }
+        if (estado == 4) {
+            *tipoNumero = 2;  // Octal
+            return 1;
+        }
+        if (estado == 6) {
+            *tipoNumero = 3;  // Hexadecimal
+            return 1;
+        }
+        *tipoNumero = 4;  // Error léxico
+        return 0;
+        
+    } else if (modo == 1) {  // Validación para expresiones aritméticas
+        
+		if (estado == 1 || estado == 3) {
+            return 1;  // Expresión válida
+        }
+        
+        return 0;  // Expresión inválida
+    }
+
+    return 0;  // No válida en ningún modo
 }
 
-int columna (int c)
+int columna(char c, int quePunto)
 {
-	if(c == '+')
-	{
-		return 0;//numero de columna que devuelve 
-	}
-	if(c == '-')
-	{
-		return 1;
-	}
-	if(c == '0')
-	{
-		return 2;
-	}
-	if(c == 'x' || c == 'X')
-	{
-		return 3;
-	}
-	if(c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7')
-	{
-		return 4;
-	}
-	if(c == '8' || c == '9')
-	{
-		return 5;
-	}
-	if(c == 'a' || c == 'b' || c == 'c' || c == 'd' || c == 'e' || c == 'f' || c == 'A' || c == 'B' || c == 'C' || c == 'D' || c == 'E' || c == 'F')
-	{
-		return 6;
-	}
-	else
-	{
-		return -1;
-	}
+    if (quePunto) {
+        // Lógica para el análisis de números (punto 1)
+        if (c == '+' || c == '-')return 0;   // Signos
+        if (c == '0') return 2;               // Prefijo para octal/hexadecimal
+        if (c >= '1' && c <= '7') return 4;   // Números octales (1-7)
+        if (c == '8' || c == '9') return 5;   // Números decimales
+        if (c == 'x' || c == 'X') return 3;   // Prefijo hexadecimal
+        if (c == 'a' || c == 'b' || c == 'c' || c == 'd' || c == 'e' || c == 'f' ||
+            c == 'A' || c == 'B' || c == 'C' || c == 'D' || c == 'E' || c == 'F') 
+        {
+            return 6;  // Dígitos hexadecimales
+        }
+        return -1;  // Otros caracteres no válidos
+        
+    } else {
+        
+		// Lógica para el análisis de expresiones matemáticas (punto 3)
+        if (c >= '0' && c <= '9') {
+		return 0;
+		}
+		   // Dígitos
+        if (c == '+' || c == '-' || c == '*' || c == '/') {
+		return 1; 
+		}
+		// Operadores matemáticos
+        return -1;  // Otros caracteres no válidos
+    }
 }
 
 //--------------------FUNCIONES DEL PUNTO 2-----------------------
@@ -361,81 +382,3 @@ void infijaAPosfija(char* expresion, char* cadenaDeSalida) {
     cadenaDeSalida[k] = '\0'; //para terminar la cadena
 }
 
-
-int caracteresPertenecenAlAlfabetoP3(char* cadena)
-{
-	int i = 0;
-	int j = 0;
-	static char alfabetoP3[15] = "0123456789-+*/";
-	
-	for (i = 0; cadena[i]; i++)
-    {
-        int esValido = 0;
-		
-        for (j = 0; alfabetoP3[j]; j++) 
-        {
-            
-			if (cadena[i] == alfabetoP3[j])
-            {
-                esValido = 1; 
-            }
-        }
-        /*bucle en el que se compara un caracter de la cadena con todos los de 
-		la lista de caracteres validos,*/
-        
-        if (!esValido)
-        {
-            return 0; 
-        }
-    }
-    
-    return 1; // Todos los caracteres son válidos
-}
-
-
-int esPalabraP3(char* cadena)
-{
-	//1ero hay que hacer la matriz (TT)--> el la que me da la logica para saber si una cadena llega o no a un estado de aceptacion
-	static int ttP3[5][2]={
-							{1,4},
-							{1,2},
-							{3,4},
-							{3,2},
-							{4,4},
-						};
-	
-	int estado = 0; // ese es mi estado inicial
-	int i=0;
-	
-	int c=cadena[0]; 
-	
-	while(c != '\0')
-	{
-		estado=ttP3[estado][columnaP3(c)]; 
-		c=cadena[++i]; 
-	}
-	//cuando sale del while sale en un estado, a mi me interesan los estados de ACEPTACION
-	if(estado == 1 || estado == 3)
-	{
-		return 1; 
-	} 
-	else
-	return 0; //no es una palabra valida
-}
-
-
-int columnaP3 (int c)
-{
-	if(isdigit(c))
-	{
-		return 0;//numero de columna que devuelve 
-	}
-	if(c == '+' || c == '-' ||c == '*' || c == '/')
-	{
-		return 1;
-	}
-	else
-	{
-		return -1;
-	}
-}
