@@ -126,20 +126,6 @@ if(!caracteresPertenecenAlAlfabetoP3(expresion)) // si NO verifica algun caracte
 		printf("La expresión contiene un error sintáctico\n");
 		return 0;
 	}
-
-
-	if(!caracteresPertenecenAlAlfabetoP3(expresion)) // si NO verifica algun caracter
-	{
-		printf("La expresión contiene caracteres que no pertenecen al alfabeto.\n");
-		return 0;
-	}
-
-	if (!esPalabraP3(expresion)) // si NO verifica expresion
-	{
-		printf("La expresión contiene un error sintáctico\n");
-		return 0;
-	}
-
     char expresionPosfija[MAX];
     infijaAPosfija(expresion, expresionPosfija);
     printf("Resultado: %d\n", evaluarCadenaPosfija(expresionPosfija));
@@ -410,13 +396,12 @@ int caracteresPertenecenAlAlfabetoP3(char* cadena)
 int esPalabraP3(char* cadena)
 {
 	//1ero hay que hacer la matriz (TT)--> el la que me da la logica para saber si una cadena llega o no a un estado de aceptacion
-	static int ttP3[6][3]={
-							{2,1,5},
-							{2,5,5},
-							{2,3,3},
-							{4,5,5},
-							{4,3,3},
-							{5,5,5}
+	static int ttP3[5][2]={
+							{1,4},
+							{1,2},
+							{3,4},
+							{3,2},
+							{4,4},
 						};
 	
 	int estado = 0; // ese es mi estado inicial
@@ -430,7 +415,7 @@ int esPalabraP3(char* cadena)
 		c=cadena[++i]; 
 	}
 	//cuando sale del while sale en un estado, a mi me interesan los estados de ACEPTACION
-	if(estado == 2 || estado == 4)
+	if(estado == 1 || estado == 3)
 	{
 		return 1; 
 	} 
@@ -445,13 +430,9 @@ int columnaP3 (int c)
 	{
 		return 0;//numero de columna que devuelve 
 	}
-	if(c == '+' || c == '-') //diferenciar +,- de *,/ permite empezar la expresion con + o -
+	if(c == '+' || c == '-' ||c == '*' || c == '/')
 	{
 		return 1;
-	}
-	if(c == '*' || c == '/')
-	{
-		return 2;
 	}
 	else
 	{
