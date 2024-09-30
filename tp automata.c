@@ -16,7 +16,7 @@ int esOperador(char c);
 int precedencia(char op);
 int hacerOperacion(int a, int b, char op);
 int evaluarCadenaPosfija(char* tokens);
-void prefijaAPosfija(char* expresion, char* cadenaDeSalida);
+void infijaAPosfija(char* expresion, char* cadenaDeSalida);
 
 int main()
 {
@@ -112,7 +112,7 @@ int main()
     printf("Ingrese un calculo sencillo: ");
     scanf("%s", expresion);    
     char expresionPosfija[MAX];
-    prefijaAPosfija(expresion, expresionPosfija);
+    infijaAPosfija(expresion, expresionPosfija);
     printf("Resultado: %d\n", evaluarCadenaPosfija(expresionPosfija));
 
 	return 0;
@@ -318,7 +318,7 @@ int evaluarCadenaPosfija(char* tokens) { //le pasamos la cadena YA en posfija
     return stack[top]; //cuando se proceso todo, el resultdo de la exp queda en la cima de la pila
 }
 
-void prefijaAPosfija(char* expresion, char* cadenaDeSalida) {
+void infijaAPosfija(char* expresion, char* cadenaDeSalida) {
     char stack[MAX]; //pila
     int top = -1, k = 0; //top es pos de la pila y k de la cadena de salida
     int len = strlen(expresion);
