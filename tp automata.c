@@ -17,11 +17,14 @@ int precedencia(char op);
 int hacerOperacion(int a, int b, char op);
 int evaluarCadenaPosfija(char* tokens);
 void infijaAPosfija(char* expresion, char* cadenaDeSalida);
+int caracteresPertenecenAlAlfabetoP3 (char*cadena);
+int esPalabraP3(char*); 
+int columnaP3(int);
 
 int main()
 {
 	//--------------------PUNTO 1-----------------------
-	char cadena[100];
+	char cadena[MAX];
 	
 	printf("Ingrese la cadena de numeros separados por '#': ");
 	scanf("%s", cadena);
@@ -34,7 +37,7 @@ int main()
 
 	int i=0, j=0, inicio=0;
 	int contadorDecimales=0, contadorOctales=0, contadorHexadecimales=0;
-	char subcadena[100];
+	char subcadena[MAX];
 	
 	while(cadena[i] != '\0')
 	{
@@ -109,8 +112,21 @@ int main()
     	printf("El numero convertido es: %d\n", numero);  // Salida: -1234
 	//--------------------PUNTO 3-----------------------
 	char expresion[MAX];
-    printf("Ingrese un calculo sencillo: ");
+    printf("Ingrese un calculo sencillo:  (sin espacios y pudiendo utilizar los operadores + - / *)\n");
     scanf("%s", expresion);    
+
+if(!caracteresPertenecenAlAlfabetoP3(expresion)) // si NO verifica algun caracter
+	{
+		printf("La expresión contiene caracteres que no pertenecen al alfabeto.\n");
+		return 0;
+	}
+
+	if (!esPalabraP3(expresion)) // si NO verifica expresion
+	{
+		printf("La expresión contiene un error sintáctico\n");
+		return 0;
+	}
+
     char expresionPosfija[MAX];
     infijaAPosfija(expresion, expresionPosfija);
     printf("Resultado: %d\n", evaluarCadenaPosfija(expresionPosfija));
@@ -347,3 +363,85 @@ void infijaAPosfija(char* expresion, char* cadenaDeSalida) {
 }
 
 
+int caracteresPertenecenAlAlfabetoP3(char* cadena)
+{
+	int i = 0;
+	int j = 0;
+	static char alfabetoP3[15] = "0123456789-+*/";
+	
+	for (i = 0; cadena[i]; i++)
+    {
+        int esValido = 0;
+		
+        for (j = 0; alfabetoP3[j]; j++) 
+        {
+            
+			if (cadena[i] == alfabetoP3[j])
+            {
+                esValido = 1; 
+            }
+        }
+        /*bucle en el que se compara un caracter de la cadena con todos los de 
+		la lista de caracteres validos,*/
+        
+        if (!esValido)
+        {
+            return 0; 
+        }
+    }
+    
+    return 1; // Todos los caracteres son válidos
+}
+
+
+int esPalabraP3(char* cadena)
+{
+	//1ero hay que hacer la matriz (TT)--> el la que me da la logica para saber si una cadena llega o no a un estado de aceptacion
+	static int ttP3[6][3]={
+							{2,1,5},
+							{2,5,5},
+							{2,3,3},
+							{4,5,5},
+							{4,3,3},
+							{5,5,5}
+						};
+	
+	int estado = 0; // ese es mi estado inicial
+	int i=0;
+	
+	int c=cadena[0]; 
+	
+	while(c != '\0')
+	{
+		estado=ttP3[estado][columnaP3(c)]; 
+		c=cadena[++i]; 
+	}
+	//cuando sale del while sale en un estado, a mi me interesan los estados de ACEPTACION
+	if(estado == 2 || estado == 4)
+	{
+		return 1; 
+	} 
+	else
+	return 0; //no es una palabra valida
+}
+
+
+int columnaP3 (int c)
+{
+	if(isdigit(c))
+	{
+		return 0;//numero de columna que devuelve 
+	}
+	if(c == '+' || c == '-') //diferenciar +,- de *,/ permite empezar la expresion con + o -
+	{
+		return 1;
+	}
+	if(c == '*' || c == '/')
+	{
+		return 2;
+	}
+	else
+	{
+		return -1;
+	}
+}
