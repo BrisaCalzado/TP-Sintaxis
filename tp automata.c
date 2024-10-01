@@ -115,7 +115,7 @@ int main()
     	
 	//--------------------PUNTO 3-----------------------
 	char expresion[MAX];
-    printf("Ingrese un calculo sencillo:  (sin espacios y pudiendo utilizar los operadores + - / *)\n");
+    printf("Ingrese un calculo sencillo: ");
     scanf("%s", expresion);    
 	char caracteresValidos3[15] = "0123456789-+*/";
 	
